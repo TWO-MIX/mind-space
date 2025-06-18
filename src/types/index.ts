@@ -82,4 +82,5 @@ export interface UserState {
   email: string
   isMember: boolean
   bookings: SeatBooking[]
+  seatCredits: number // Credits that can be used to exchange for cafe seats
 }

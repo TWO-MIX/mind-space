@@ -1,13 +1,14 @@
 import React from 'react'
-import { Coffee, MapPin, Gift } from 'lucide-react'
-import { PayItForwardState } from '../types'
+import { Coffee, MapPin, Gift, Armchair } from 'lucide-react'
+import { PayItForwardState, UserState } from '../types'
 
 interface HeaderProps {
   payItForwardState: PayItForwardState
+  userState: UserState
   onPayItForwardClick: () => void
 }
 
-const Header: React.FC<HeaderProps> = ({ payItForwardState, onPayItForwardClick }) => {
+const Header: React.FC<HeaderProps> = ({ payItForwardState, userState, onPayItForwardClick }) => {
   return (
     <header className="bg-white shadow-sm border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -27,6 +28,16 @@ const Header: React.FC<HeaderProps> = ({ payItForwardState, onPayItForwardClick 
               <MapPin className="h-4 w-4" />
               <span className="text-sm">Outram, Singapore</span>
             </div>
+            
+            {userState.isMember && (
+              <div className="flex items-center space-x-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-4 py-2 rounded-lg shadow-sm">
+                <Armchair className="h-4 w-4" />
+                <span className="text-sm font-medium">Your kind seat credits</span>
+                <span className="bg-white bg-opacity-20 px-2 py-0.5 rounded-full text-xs font-semibold">
+                  {userState.seatCredits}
+                </span>
+              </div>
+            )}
             
             <button
               onClick={onPayItForwardClick}

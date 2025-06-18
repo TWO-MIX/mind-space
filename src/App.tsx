@@ -23,7 +23,8 @@ function App() {
     name: 'John Doe',
     email: 'john@example.com',
     isMember: Math.random() > 0.3, // 70% chance of being a member
-    bookings: []
+    bookings: [],
+    seatCredits: Math.floor(Math.random() * 15) + 5 // Random credits between 5-20
   })
   const [filters, setFilters] = useState<FilterOptions>({
     quietnessLevel: 'all',
@@ -89,6 +90,13 @@ function App() {
     setShowSeatBooking(false)
   }
 
+  const handleUseSeatCredits = (creditsUsed: number) => {
+    setUserState(prev => ({
+      ...prev,
+      seatCredits: Math.max(0, prev.seatCredits - creditsUsed)
+    }))
+  }
+
   function getDurationInHours(timeSlot: TimeSlot): number {
     const start = new Date(`2000-01-01T${timeSlot.startTime}`)
     const end = new Date(`2000-01-01T${timeSlot.endTime}`)
@@ -103,6 +111,7 @@ function App() {
     <div className="min-h-screen bg-gray-50">
       <Header 
         payItForwardState={payItForwardState}
+        userState={userState}
         onPayItForwardClick={() => setShowPayItForward(true)}
       />
       
@@ -146,6 +155,7 @@ function App() {
           userState={userState}
           onClaimCredit={handleClaimCredit}
           onBookSeat={handleOpenSeatBooking}
+          onUseSeatCredits={handleUseSeatCredits}
         />
       )}
 
@@ -164,6 +174,7 @@ function App() {
           onClose={() => setShowSeatBooking(false)}
           userState={userState}
           onBookSeat={handleBookSeat}
+          onUseSeatCredits={handleUseSeatCredits}
         />
       )}
     </div>
