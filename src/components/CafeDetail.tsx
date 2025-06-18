@@ -1,6 +1,7 @@
 import React from 'react'
 import { X, Star, MapPin, Clock, Volume2, Users, Wifi, Zap, Laptop, Car, TreePine, Coffee, Gift, Calendar } from 'lucide-react'
 import { Cafe, PayItForwardState, UserState } from '../types'
+import TimeSlotInfographic from './TimeSlotInfographic'
 
 interface CafeDetailProps {
   cafe: Cafe
@@ -55,7 +56,7 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
         <div className="relative">
           <img 
             src={cafe.image} 
@@ -73,7 +74,7 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
             {cafe.payItForwardCredits && cafe.payItForwardCredits > 0 && (
               <div className="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-3 py-2 rounded-full text-sm font-medium flex items-center space-x-2">
                 <Coffee className="h-4 w-4" />
-                <span>{cafe.payItForwardCredits} free coffees available</span>
+                <span>{cafe.payItForwardCredits} kind coffees available</span>
               </div>
             )}
             
@@ -117,9 +118,9 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
                       <Gift className="h-5 w-5 text-white" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900">Free Coffee Available!</h3>
+                      <h3 className="font-semibold text-gray-900">Kind Coffee Available!</h3>
                       <p className="text-sm text-gray-600">
-                        As a qualified member, you can claim a free coffee here.
+                        As a qualified member, you can claim a kind coffee here.
                       </p>
                     </div>
                   </div>
@@ -160,9 +161,12 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
 
           <p className="text-gray-700 mb-6">{cafe.description}</p>
 
+          {/* Time Slot Infographic */}
+          <TimeSlotInfographic cafeId={cafe.id} cafeName={cafe.name} />
+
           {/* Atmosphere */}
           <div className="mb-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-3">Atmosphere</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-3">Current Atmosphere</h3>
             <div className="flex flex-wrap gap-3">
               <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium ${getQuietnessColor(cafe.quietnessLevel)}`}>
                 <Volume2 className="h-4 w-4 mr-2" />
@@ -184,7 +188,7 @@ const CafeDetail: React.FC<CafeDetailProps> = ({
                   <div className="p-4 border border-pink-200 rounded-lg bg-pink-50">
                     <div className="flex items-center space-x-2 mb-2">
                       <Coffee className="h-5 w-5 text-pink-600" />
-                      <span className="font-medium text-pink-800">Pay It Forward Seats</span>
+                      <span className="font-medium text-pink-800">Pay It Forward Kind Seats</span>
                     </div>
                     <div className="text-sm text-pink-700">
                       <p>{cafe.payItForwardSeats.availableSeats} of {cafe.payItForwardSeats.totalSeats} available</p>

@@ -4,17 +4,26 @@ import FilterBar from './components/FilterBar'
 import CafeGrid from './components/CafeGrid'
 import CafeDetail from './components/CafeDetail'
 import PayItForwardModal from './components/PayItForwardModal'
+import SeatBookingModal from './components/SeatBookingModal'
 import { cafes } from './data/cafes'
-import { Cafe, FilterOptions, PayItForwardState } from './types'
+import { Cafe, FilterOptions, PayItForwardState, UserState, TimeSlot, SeatBooking } from './types'
 
 function App() {
   const [selectedCafe, setSelectedCafe] = useState<Cafe | null>(null)
   const [showPayItForward, setShowPayItForward] = useState(false)
+  const [showSeatBooking, setShowSeatBooking] = useState(false)
   const [payItForwardState, setPayItForwardState] = useState<PayItForwardState>({
     totalCredits: 67,
     userCredits: 0,
     isQualifiedMember: Math.random() > 0.5, // Simulate qualification status
     hasDonated: false
+  })
+  const [userState, setUserState] = useState<UserState>({
+    id: 'user-123',
+    name: 'John Doe',
+    email: 'john@example.com',
+    isMember: Math.random() > 0.3, // 70% chance of being a member
+    bookings: []
   })
   const [filters, setFilters] = useState<FilterOptions>({
     quietnessLevel: 'all',
@@ -22,7 +31,8 @@ function App() {
     hasWifi: false,
     hasOutlets: false,
     allowsLaptops: false,
-    hasPayItForwardSeats: false
+    hasPayItForwardSeats: false,
+    hasBookableSeats: false
   })
 
   const filteredCafes = cafes.filter(cafe => {
@@ -32,6 +42,7 @@ function App() {
     if (filters.hasOutlets && !cafe.amenities.outlets) return false
     if (filters.allowsLaptops && !cafe.amenities.laptopFriendly) return false
     if (filters.hasPayItForwardSeats && (!cafe.payItForwardSeats?.enabled || cafe.payItForwardSeats.availableSeats === 0)) return false
+    if (filters.hasBookableSeats && !cafe.bookableSeats?.enabled) return false
     return true
   })
 
@@ -53,6 +64,41 @@ function App() {
     }
   }
 
+  const handleBookSeat = (cafeId: string, timeSlot: TimeSlot, seatsBooked: number, specialRequests?: string) => {
+    const cafe = cafes.find(c => c.id === cafeId)
+    if (!cafe) return
+
+    const booking: SeatBooking = {
+      id: `booking-${Date.now()}`,
+      cafeId,
+      cafeName: cafe.name,
+      userId: userState.id,
+      timeSlot,
+      seatsBooked,
+      totalCost: cafe.bookableSeats!.pricePerHour * seatsBooked * getDurationInHours(timeSlot),
+      bookingTime: new Date().toISOString(),
+      status: 'confirmed',
+      specialRequests
+    }
+
+    setUserState(prev => ({
+      ...prev,
+      bookings: [...prev.bookings, booking]
+    }))
+
+    setShowSeatBooking(false)
+  }
+
+  function getDurationInHours(timeSlot: TimeSlot): number {
+    const start = new Date(`2000-01-01T${timeSlot.startTime}`)
+    const end = new Date(`2000-01-01T${timeSlot.endTime}`)
+    return (end.getTime() - start.getTime()) / (1000 * 60 * 60)
+  }
+
+  const handleOpenSeatBooking = () => {
+    setShowSeatBooking(true)
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header 
@@ -63,7 +109,7 @@ function App() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Find Your Perfect Cafe
+            Find Your Mind Space
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl">
             Discover cafes based on their atmosphere, noise levels, and amenities. 
@@ -78,6 +124,11 @@ function App() {
             <h2 className="text-2xl font-semibold text-gray-900">
               {filteredCafes.length} Cafes Found
             </h2>
+            {userState.isMember && userState.bookings.length > 0 && (
+              <div className="text-sm text-gray-600">
+                You have {userState.bookings.filter(b => b.status === 'confirmed').length} active bookings
+              </div>
+            )}
           </div>
           
           <CafeGrid 
@@ -92,7 +143,9 @@ function App() {
           cafe={selectedCafe} 
           onClose={() => setSelectedCafe(null)}
           payItForwardState={payItForwardState}
+          userState={userState}
           onClaimCredit={handleClaimCredit}
+          onBookSeat={handleOpenSeatBooking}
         />
       )}
 
@@ -102,6 +155,15 @@ function App() {
           onClose={() => setShowPayItForward(false)}
           onDonate={handleDonate}
           onClaimCredit={handleClaimCredit}
+        />
+      )}
+
+      {showSeatBooking && selectedCafe && (
+        <SeatBookingModal
+          cafe={selectedCafe}
+          onClose={() => setShowSeatBooking(false)}
+          userState={userState}
+          onBookSeat={handleBookSeat}
         />
       )}
     </div>

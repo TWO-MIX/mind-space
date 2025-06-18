@@ -78,8 +78,8 @@ const CafeCard: React.FC<CafeCardProps> = ({ cafe, onClick }) => {
                 <Coffee className="h-3 w-3" />
                 <span>
                   {cafe.payItForwardSeats.availableSeats > 0 
-                    ? `${cafe.payItForwardSeats.availableSeats} free seats`
-                    : 'No free seats'
+                    ? `${cafe.payItForwardSeats.availableSeats} kind seats`
+                    : 'No kind seats'
                   }
                 </span>
               </div>
@@ -144,7 +144,7 @@ const CafeCard: React.FC<CafeCardProps> = ({ cafe, onClick }) => {
                 {cafe.payItForwardSeats?.enabled && (
                   <div className="flex items-center space-x-1">
                     <Users className="h-3 w-3" />
-                    <span>{cafe.payItForwardSeats.totalSeats} free seats</span>
+                    <span>{cafe.payItForwardSeats.totalSeats} kind seats</span>
                   </div>
                 )}
                 {cafe.bookableSeats?.enabled && (

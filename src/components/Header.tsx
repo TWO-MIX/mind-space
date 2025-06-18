@@ -18,7 +18,7 @@ const Header: React.FC<HeaderProps> = ({ payItForwardState, onPayItForwardClick 
             </div>
             <div>
               <h1 className="text-xl font-bold text-gray-900">QuietSpaces</h1>
-              <p className="text-sm text-gray-500">Find your perfect cafe</p>
+              <p className="text-sm text-gray-500">Find your mind space</p>
             </div>
           </div>
           

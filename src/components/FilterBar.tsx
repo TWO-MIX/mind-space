@@ -119,7 +119,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFiltersChange }) => {
                 className="rounded border-gray-300 text-pink-600 focus:ring-pink-500"
               />
               <Coffee className="h-4 w-4 ml-2 mr-1 text-pink-600" />
-              <span className="text-sm text-gray-700">Free Seats</span>
+              <span className="text-sm text-gray-700">Kind Seats</span>
             </label>
             <label className="flex items-center">
               <input
